@@ -33,8 +33,8 @@ apt update && apt install -y docker.io docker-compose-plugin
 systemctl enable --now docker
 
 # Create app directory
-mkdir -p /opt/recipeasy/infra/images
-cd /opt/recipeasy
+mkdir -p ~/recipeasy/infra/images
+cd ~/recipeasy
 
 # Clone the repo
 git clone https://github.com/yourusername/recipeasy.git .
@@ -87,7 +87,7 @@ In your GitHub repo → Settings → Secrets → Actions, add:
 On the Droplet:
 
 ```bash
-cd /opt/recipeasy/infra
+cd ~/recipeasy/infra
 
 # Pull and start everything
 docker compose up -d
@@ -111,7 +111,7 @@ cd web
 VITE_API_URL=https://api.recipeasy.yourdomain.com/v1 npm run build
 
 # Copy the build to the Droplet
-scp -r dist/* root@<droplet-ip>:/opt/recipeasy/infra/web/
+scp -r dist/* root@<droplet-ip>:~/recipeasy/infra/web/
 ```
 
 After this, all future deploys happen automatically via `git push` to `main`.
@@ -133,17 +133,17 @@ Push to `main` — GitHub Actions will:
 
 ```bash
 # View logs
-docker compose -f /opt/recipeasy/infra/docker-compose.yml logs -f api
+docker compose -f ~/recipeasy/infra/docker-compose.yml logs -f api
 
 # Restart the API
-docker compose -f /opt/recipeasy/infra/docker-compose.yml restart api
+docker compose -f ~/recipeasy/infra/docker-compose.yml restart api
 
 # Connect to the database
 docker exec -it recipeasy-infra-postgres-1 psql -U recipeasy recipeasy
 
 # Manual backup
 docker exec recipeasy-infra-postgres-1 pg_dump -U recipeasy recipeasy \
-  | gzip > /opt/recipeasy/backup-$(date +%Y%m%d).sql.gz
+  | gzip > ~/recipeasy/backup-$(date +%Y%m%d).sql.gz
 ```
 
 ---
@@ -156,10 +156,10 @@ On the Droplet:
 cat > /etc/cron.daily/recipeasy-backup << 'EOF'
 #!/bin/bash
 docker exec recipeasy-infra-postgres-1 pg_dump -U recipeasy recipeasy \
-  | gzip > /opt/recipeasy/backups/$(date +%Y%m%d).sql.gz
-find /opt/recipeasy/backups -mtime +30 -delete
+  | gzip > ~/recipeasy/backups/$(date +%Y%m%d).sql.gz
+find ~/recipeasy/backups -mtime +30 -delete
 EOF
 
 chmod +x /etc/cron.daily/recipeasy-backup
-mkdir -p /opt/recipeasy/backups
+mkdir -p ~/recipeasy/backups
 ```
