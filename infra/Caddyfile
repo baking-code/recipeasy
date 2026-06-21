@@ -1,4 +1,4 @@
-api.recipeasy.recipeasy.yourdomain.com {
+api.recipeasy.recipeasy.benjaminallanking.com {
     reverse_proxy api:8080
 
     # Serve uploaded recipe images directly
@@ -8,7 +8,7 @@ api.recipeasy.recipeasy.yourdomain.com {
     }
 }
 
-recipeasy.yourdomain.com {
+recipeasy.benjaminallanking.com {
     root * /var/www/recipeasy
     encode gzip
 

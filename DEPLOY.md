@@ -6,7 +6,7 @@
 
 1. Go to [console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
 2. Create a new **OAuth 2.0 Client ID** (Web application)
-3. Add authorised redirect URI: `https://api.recipeasy.yourdomain.com/v1/auth/google/callback`
+3. Add authorised redirect URI: `https://api.recipeasy.benjaminallanking.com/v1/auth/google/callback`
 4. Note the **Client ID** and **Client Secret**
 
 ### 2. Gemini API key
@@ -20,8 +20,8 @@
 Point two A records at your Droplet's IP address:
 
 ```
-recipeasy.yourdomain.com      A  <droplet-ip>
-api.recipeasy.yourdomain.com  A  <droplet-ip>
+recipeasy.benjaminallanking.com      A  <droplet-ip>
+api.recipeasy.benjaminallanking.com  A  <droplet-ip>
 ```
 
 ### 4. Droplet setup
@@ -56,10 +56,10 @@ Fill in every value — see [infra/.env.example](infra/.env.example) for the ful
 | `JWT_SECRET` | A random 64-character string (`openssl rand -hex 32`) |
 | `GOOGLE_CLIENT_ID` | From step 1 |
 | `GOOGLE_CLIENT_SECRET` | From step 1 |
-| `GOOGLE_REDIRECT_URL` | `https://api.recipeasy.yourdomain.com/v1/auth/google/callback` |
+| `GOOGLE_REDIRECT_URL` | `https://api.recipeasy.benjaminallanking.com/v1/auth/google/callback` |
 | `ALLOWED_EMAILS` | `you@gmail.com,wife@gmail.com` |
 | `GEMINI_API_KEY` | From step 2 |
-| `FRONTEND_URL` | `https://recipeasy.yourdomain.com` |
+| `FRONTEND_URL` | `https://recipeasy.benjaminallanking.com` |
 
 ### 6. Set up nginx
 
@@ -67,7 +67,7 @@ Copy the nginx config to the server and substitute your domain:
 
 ```bash
 sudo cp ~/recipeasy/infra/nginx.conf /etc/nginx/sites-available/recipeasy
-sudo nano /etc/nginx/sites-available/recipeasy  # replace yourdomain.com
+sudo nano /etc/nginx/sites-available/recipeasy  # replace benjaminallanking.com
 sudo ln -s /etc/nginx/sites-available/recipeasy /etc/nginx/sites-enabled/recipeasy
 sudo nginx -t && sudo systemctl reload nginx
 ```
@@ -75,7 +75,7 @@ sudo nginx -t && sudo systemctl reload nginx
 Then get TLS certificates via certbot:
 
 ```bash
-sudo certbot --nginx -d recipeasy.yourdomain.com -d api.recipeasy.yourdomain.com
+sudo certbot --nginx -d recipeasy.benjaminallanking.com -d api.recipeasy.benjaminallanking.com
 ```
 
 ### 7. Add PWA icons
@@ -93,7 +93,7 @@ In your GitHub repo → Settings → Secrets → Actions, add:
 | `DROPLET_HOST` | Your Droplet's IP or hostname |
 | `DROPLET_USER` | `root` (or your SSH user) |
 | `DROPLET_SSH_KEY` | Contents of your private SSH key |
-| `VITE_API_URL` | `https://api.recipeasy.yourdomain.com/v1` |
+| `VITE_API_URL` | `https://api.recipeasy.benjaminallanking.com/v1` |
 
 ### 9. First deploy
 
@@ -121,7 +121,7 @@ On your local machine:
 
 ```bash
 cd web
-VITE_API_URL=https://api.recipeasy.yourdomain.com/v1 npm run build
+VITE_API_URL=https://api.recipeasy.benjaminallanking.com/v1 npm run build
 
 # Copy the build to the Droplet
 scp -r dist/* benjamin@<droplet-ip>:/var/www/recipeasy/
