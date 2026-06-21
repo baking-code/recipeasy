@@ -45,30 +45,28 @@ trap cleanup EXIT INT TERM
 # ── postgres ─────────────────────────────────────────────────────────────────
 if docker ps --format '{{.Names}}' | grep -q "^${DB_CONTAINER}$"; then
   info "postgres already running"
+elif docker ps -a --format '{{.Names}}' | grep -q "^${DB_CONTAINER}$"; then
+  info "starting existing postgres container"
+  docker start "${DB_CONTAINER}" >/dev/null
 else
-  if docker ps -a --format '{{.Names}}' | grep -q "^${DB_CONTAINER}$"; then
-    info "starting existing postgres container"
-    docker start "${DB_CONTAINER}" >/dev/null
-  else
-    info "creating postgres container"
-    docker run -d \
-      --name "${DB_CONTAINER}" \
-      -e POSTGRES_USER="${DB_USER}" \
-      -e POSTGRES_PASSWORD="${DB_PASS}" \
-      -e POSTGRES_DB="${DB_NAME}" \
-      -p "${DB_PORT}:5432" \
-      postgres:16-alpine >/dev/null
-  fi
-
-  info "waiting for postgres..."
-  until docker exec "${DB_CONTAINER}" pg_isready -U "${DB_USER}" -q 2>/dev/null; do
-    sleep 0.5
-  done
-
-  info "applying schema migration"
-  docker exec -i "${DB_CONTAINER}" psql -U "${DB_USER}" "${DB_NAME}" \
-    < "$(dirname "$0")/api/db/migrations/001_initial_schema.sql"
+  info "creating postgres container"
+  docker run -d \
+    --name "${DB_CONTAINER}" \
+    -e POSTGRES_USER="${DB_USER}" \
+    -e POSTGRES_PASSWORD="${DB_PASS}" \
+    -e POSTGRES_DB="${DB_NAME}" \
+    -p "${DB_PORT}:5432" \
+    postgres:16-alpine >/dev/null
 fi
+
+info "waiting for postgres..."
+until docker exec "${DB_CONTAINER}" pg_isready -U "${DB_USER}" -q 2>/dev/null; do
+  sleep 0.5
+done
+
+info "applying schema migration"
+docker exec -i "${DB_CONTAINER}" psql -U "${DB_USER}" "${DB_NAME}" \
+  < "$(dirname "$0")/api/db/migrations/001_initial_schema.sql"
 
 # ── go api ───────────────────────────────────────────────────────────────────
 info "starting Go API on :${API_PORT} (DEV_AUTH=true)"

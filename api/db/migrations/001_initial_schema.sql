@@ -2,7 +2,7 @@
 
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id         UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     email      TEXT NOT NULL UNIQUE,
     name       TEXT NOT NULL,
@@ -10,7 +10,7 @@ CREATE TABLE users (
     created_at TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE TABLE recipes (
+CREATE TABLE IF NOT EXISTS recipes (
     id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     owner_id        UUID NOT NULL REFERENCES users(id),
     title           TEXT NOT NULL,
@@ -26,10 +26,10 @@ CREATE TABLE recipes (
     updated_at      TIMESTAMPTZ NOT NULL DEFAULT now()
 );
 
-CREATE INDEX recipes_search_idx ON recipes USING gin(search_vector);
-CREATE INDEX recipes_owner_idx ON recipes(owner_id);
+CREATE INDEX IF NOT EXISTS recipes_search_idx ON recipes USING gin(search_vector);
+CREATE INDEX IF NOT EXISTS recipes_owner_idx ON recipes(owner_id);
 
-CREATE TABLE ingredients (
+CREATE TABLE IF NOT EXISTS ingredients (
     id        UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
     position  INT NOT NULL,
@@ -38,7 +38,7 @@ CREATE TABLE ingredients (
     name      TEXT NOT NULL
 );
 
-CREATE TABLE steps (
+CREATE TABLE IF NOT EXISTS steps (
     id            UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     recipe_id     UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
     position      INT NOT NULL,
@@ -47,12 +47,12 @@ CREATE TABLE steps (
     timer_label   TEXT
 );
 
-CREATE TABLE tags (
+CREATE TABLE IF NOT EXISTS tags (
     id   UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE recipe_tags (
+CREATE TABLE IF NOT EXISTS recipe_tags (
     recipe_id UUID NOT NULL REFERENCES recipes(id) ON DELETE CASCADE,
     tag_id    UUID NOT NULL REFERENCES tags(id) ON DELETE CASCADE,
     PRIMARY KEY (recipe_id, tag_id)
