@@ -61,9 +61,22 @@ Fill in every value — see [infra/.env.example](infra/.env.example) for the ful
 | `GEMINI_API_KEY` | From step 2 |
 | `FRONTEND_URL` | `https://recipeasy.yourdomain.com` |
 
-### 6. Update the Caddyfile
+### 6. Set up nginx
 
-Replace `recipeasy.yourdomain.com` with your actual domain in [infra/Caddyfile](infra/Caddyfile).
+Copy the nginx config to the server and substitute your domain:
+
+```bash
+sudo cp ~/recipeasy/infra/nginx.conf /etc/nginx/sites-available/recipeasy
+sudo nano /etc/nginx/sites-available/recipeasy  # replace yourdomain.com
+sudo ln -s /etc/nginx/sites-available/recipeasy /etc/nginx/sites-enabled/recipeasy
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+Then get TLS certificates via certbot:
+
+```bash
+sudo certbot --nginx -d recipeasy.yourdomain.com -d api.recipeasy.yourdomain.com
+```
 
 ### 7. Add PWA icons
 
@@ -111,7 +124,7 @@ cd web
 VITE_API_URL=https://api.recipeasy.yourdomain.com/v1 npm run build
 
 # Copy the build to the Droplet
-scp -r dist/* root@<droplet-ip>:~/recipeasy/infra/web/
+scp -r dist/* benjamin@<droplet-ip>:/var/www/recipeasy/
 ```
 
 After this, all future deploys happen automatically via `git push` to `main`.

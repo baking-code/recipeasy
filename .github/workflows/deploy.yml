@@ -82,7 +82,7 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           source: "web-dist/*"
-          target: "~/recipeasy/infra/web"
+          target: "/var/www/recipeasy"
           strip_components: 1
 
       - name: Deploy API to server
