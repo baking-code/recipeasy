@@ -1,0 +1,76 @@
+.shell {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  padding: 0 1rem;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.headerLeft {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.headerTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 50%;
+}
+
+.headerRight {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+}
+
+.brand {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.backBtn {
+  background: none;
+  border: none;
+  font-size: 0.9375rem;
+  color: var(--color-primary);
+  padding: 0.25rem 0;
+  font-weight: 500;
+}
+
+.logoutBtn {
+  background: none;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-text-muted);
+}
+
+.main {
+  flex: 1;
+  padding: 1rem;
+  max-width: 680px;
+  width: 100%;
+  margin: 0 auto;
+}

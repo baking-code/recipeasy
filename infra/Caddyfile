@@ -1,0 +1,18 @@
+api.yourdomain.com {
+    reverse_proxy api:8080
+
+    # Serve uploaded recipe images directly
+    handle /images/* {
+        root * /var/recipeasy
+        file_server
+    }
+}
+
+yourdomain.com {
+    root * /var/www/recipeasy
+    encode gzip
+
+    # SPA fallback — all routes go to index.html
+    try_files {path} /index.html
+    file_server
+}

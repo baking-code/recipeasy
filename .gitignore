@@ -43,4 +43,10 @@ dist
 .idea
 
 *.bck
-*.json
+
+# Ignore raw JSON data dumps, but not project config files
+server/data/*.json
+infra/.env
+
+# Legacy catch-all (kept for compatibility, but project JSON configs are excepted above)
+# *.json  -- removed: too broad, blocks package.json, tsconfig.json, etc.
