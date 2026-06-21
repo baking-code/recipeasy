@@ -106,7 +106,7 @@ func (h *Handler) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	http.Redirect(w, r, h.frontendURL+"?token="+jwtToken, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, h.frontendURL+"/login?token="+jwtToken, http.StatusTemporaryRedirect)
 }
 
 func (h *Handler) issueJWT(userID, email, name string) (string, error) {
