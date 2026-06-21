@@ -82,7 +82,7 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           source: "web-dist/*"
-          target: "/opt/recipeasy/infra/web"
+          target: "~/recipeasy/infra/web"
           strip_components: 1
 
       - name: Deploy API to server
@@ -92,7 +92,7 @@ jobs:
           username: ${{ secrets.DROPLET_USER }}
           key: ${{ secrets.DROPLET_SSH_KEY }}
           script: |
-            cd /opt/recipeasy/infra
+            cd ~/recipeasy/infra
             docker compose pull api
             docker compose up -d api
             echo "Deploy complete"
