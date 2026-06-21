@@ -44,7 +44,8 @@ func main() {
 	googleRedirectURL := os.Getenv("GOOGLE_REDIRECT_URL")
 	allowedEmails := os.Getenv("ALLOWED_EMAILS")
 
-	authHandler := auth.NewHandler(pool, jwtSecret, googleClientID, googleClientSecret, googleRedirectURL, allowedEmails)
+	frontendURL := os.Getenv("FRONTEND_URL")
+	authHandler := auth.NewHandler(pool, jwtSecret, googleClientID, googleClientSecret, googleRedirectURL, allowedEmails, frontendURL)
 	recipesHandler := recipes.NewHandler(pool)
 	jwtMiddleware := middleware.NewJWTMiddleware(jwtSecret)
 

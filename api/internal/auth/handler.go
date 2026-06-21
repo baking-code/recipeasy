@@ -22,9 +22,10 @@ type Handler struct {
 	jwtSecret   string
 	oauthConfig *oauth2.Config
 	allowedSet  map[string]bool
+	frontendURL string
 }
 
-func NewHandler(db *pgxpool.Pool, jwtSecret, clientID, clientSecret, redirectURL, allowedEmails string) *Handler {
+func NewHandler(db *pgxpool.Pool, jwtSecret, clientID, clientSecret, redirectURL, allowedEmails, frontendURL string) *Handler {
 	allowed := map[string]bool{}
 	for _, e := range strings.Split(allowedEmails, ",") {
 		e = strings.TrimSpace(strings.ToLower(e))
@@ -46,6 +47,7 @@ func NewHandler(db *pgxpool.Pool, jwtSecret, clientID, clientSecret, redirectURL
 		jwtSecret:   jwtSecret,
 		oauthConfig: cfg,
 		allowedSet:  allowed,
+		frontendURL: frontendURL,
 	}
 }
 
@@ -104,11 +106,7 @@ func (h *Handler) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	frontendURL := r.URL.Query().Get("redirect")
-	if frontendURL == "" {
-		frontendURL = "/"
-	}
-	http.Redirect(w, r, frontendURL+"?token="+jwtToken, http.StatusTemporaryRedirect)
+	http.Redirect(w, r, h.frontendURL+"?token="+jwtToken, http.StatusTemporaryRedirect)
 }
 
 func (h *Handler) issueJWT(userID, email, name string) (string, error) {
