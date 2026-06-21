@@ -64,9 +64,11 @@ until docker exec "${DB_CONTAINER}" pg_isready -U "${DB_USER}" -q 2>/dev/null; d
   sleep 0.5
 done
 
-info "applying schema migration"
-docker exec -i "${DB_CONTAINER}" psql -U "${DB_USER}" "${DB_NAME}" \
-  < "$(dirname "$0")/api/db/migrations/001_initial_schema.sql"
+MIGRATION_FILE="$(cd "$(dirname "$0")" && pwd)/api/db/migrations/001_initial_schema.sql"
+info "applying schema migration (${MIGRATION_FILE})"
+docker cp "${MIGRATION_FILE}" "${DB_CONTAINER}:/tmp/schema.sql"
+docker exec "${DB_CONTAINER}" psql -U "${DB_USER}" -d "${DB_NAME}" \
+  -v ON_ERROR_STOP=1 -f /tmp/schema.sql
 
 # ── go api ───────────────────────────────────────────────────────────────────
 info "starting Go API on :${API_PORT} (DEV_AUTH=true)"
