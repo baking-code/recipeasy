@@ -23,9 +23,16 @@ export default function LoginPage() {
     }
   }, [navigate]);
 
+  const isDev = import.meta.env.DEV;
+
   const handleLogin = () => {
     const redirectURL = encodeURIComponent(window.location.origin + "/login");
     window.location.href = `${API_BASE}/auth/google?redirect=${redirectURL}`;
+  };
+
+  const handleDevLogin = () => {
+    const redirectURL = encodeURIComponent(window.location.origin + "/login");
+    window.location.href = `${API_BASE}/auth/dev?redirect=${redirectURL}`;
   };
 
   return (
@@ -38,6 +45,11 @@ export default function LoginPage() {
           <GoogleIcon />
           Sign in with Google
         </button>
+        {isDev && (
+          <button className={styles.devBtn} onClick={handleDevLogin}>
+            Dev login (local only)
+          </button>
+        )}
       </div>
     </div>
   );

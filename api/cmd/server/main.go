@@ -62,6 +62,10 @@ func main() {
 	r.Route("/v1", func(r chi.Router) {
 		r.Get("/auth/google", authHandler.GoogleLogin)
 		r.Get("/auth/google/callback", authHandler.GoogleCallback)
+		if os.Getenv("DEV_AUTH") == "true" {
+			log.Println("WARNING: DEV_AUTH enabled — fake login active, do not use in production")
+			r.Get("/auth/dev", authHandler.DevLoginHandler)
+		}
 
 		r.Group(func(r chi.Router) {
 			r.Use(jwtMiddleware.Authenticate)

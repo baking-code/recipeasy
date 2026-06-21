@@ -54,3 +54,20 @@
   background: #f8f8f8;
   box-shadow: var(--shadow);
 }
+
+.devBtn {
+  display: block;
+  width: 100%;
+  margin-top: 0.75rem;
+  padding: 0.625rem;
+  background: none;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius-sm);
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
+  transition: background 0.15s;
+}
+
+.devBtn:hover {
+  background: #f8f8f8;
+}
