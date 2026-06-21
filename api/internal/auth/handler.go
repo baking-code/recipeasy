@@ -98,7 +98,7 @@ func (h *Handler) GoogleCallback(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	jwtToken, err := h.issueJWT(fmt.Sprintf("%v", user.ID), user.Email, user.Name)
+	jwtToken, err := h.issueJWT(user.ID, user.Email, user.Name)
 	if err != nil {
 		http.Error(w, "failed to issue token", http.StatusInternalServerError)
 		return
@@ -163,7 +163,7 @@ func upsertUser(ctx context.Context, db *pgxpool.Pool, info *googleUserInfo) (*u
 }
 
 type userRow struct {
-	ID        interface{}
+	ID        string
 	Email     string
 	Name      string
 	AvatarURL string
