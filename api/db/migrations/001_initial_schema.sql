@@ -86,6 +86,23 @@ CREATE TRIGGER recipes_search_vector_trigger
     BEFORE INSERT OR UPDATE ON recipes
     FOR EACH ROW EXECUTE FUNCTION recipes_search_vector_update();
 
+CREATE TABLE IF NOT EXISTS meal_plans (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    owner_id     UUID NOT NULL REFERENCES users(id),
+    week_start   DATE NOT NULL,
+    created_at   TIMESTAMPTZ NOT NULL DEFAULT now(),
+    UNIQUE (owner_id, week_start)
+);
+
+CREATE TABLE IF NOT EXISTS planned_meals (
+    id           UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    meal_plan_id UUID NOT NULL REFERENCES meal_plans(id) ON DELETE CASCADE,
+    recipe_id    UUID NOT NULL REFERENCES recipes(id),
+    day_of_week  SMALLINT NOT NULL CHECK (day_of_week BETWEEN 0 AND 6),
+    meal_slot    TEXT NOT NULL CHECK (meal_slot IN ('breakfast','lunch','dinner','snack')),
+    scale_factor NUMERIC(4,2) NOT NULL DEFAULT 1.0
+);
+
 -- +goose Down
 
 DROP TRIGGER IF EXISTS recipes_search_vector_trigger ON recipes;
