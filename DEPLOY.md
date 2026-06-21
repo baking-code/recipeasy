@@ -6,7 +6,7 @@
 
 1. Go to [console.cloud.google.com/apis/credentials](https://console.cloud.google.com/apis/credentials)
 2. Create a new **OAuth 2.0 Client ID** (Web application)
-3. Add authorised redirect URI: `https://api.recipeasy.recipeasy.yourdomain.com/v1/auth/google/callback`
+3. Add authorised redirect URI: `https://api.recipeasy.yourdomain.com/v1/auth/google/callback`
 4. Note the **Client ID** and **Client Secret**
 
 ### 2. Gemini API key
@@ -21,7 +21,7 @@ Point two A records at your Droplet's IP address:
 
 ```
 recipeasy.yourdomain.com      A  <droplet-ip>
-api.recipeasy.recipeasy.yourdomain.com  A  <droplet-ip>
+api.recipeasy.yourdomain.com  A  <droplet-ip>
 ```
 
 ### 4. Droplet setup
@@ -56,7 +56,7 @@ Fill in every value — see [infra/.env.example](infra/.env.example) for the ful
 | `JWT_SECRET` | A random 64-character string (`openssl rand -hex 32`) |
 | `GOOGLE_CLIENT_ID` | From step 1 |
 | `GOOGLE_CLIENT_SECRET` | From step 1 |
-| `GOOGLE_REDIRECT_URL` | `https://api.recipeasy.recipeasy.yourdomain.com/v1/auth/google/callback` |
+| `GOOGLE_REDIRECT_URL` | `https://api.recipeasy.yourdomain.com/v1/auth/google/callback` |
 | `ALLOWED_EMAILS` | `you@gmail.com,wife@gmail.com` |
 | `GEMINI_API_KEY` | From step 2 |
 | `FRONTEND_URL` | `https://recipeasy.yourdomain.com` |
@@ -80,7 +80,7 @@ In your GitHub repo → Settings → Secrets → Actions, add:
 | `DROPLET_HOST` | Your Droplet's IP or hostname |
 | `DROPLET_USER` | `root` (or your SSH user) |
 | `DROPLET_SSH_KEY` | Contents of your private SSH key |
-| `VITE_API_URL` | `https://api.recipeasy.recipeasy.yourdomain.com/v1` |
+| `VITE_API_URL` | `https://api.recipeasy.yourdomain.com/v1` |
 
 ### 9. First deploy
 
@@ -108,7 +108,7 @@ On your local machine:
 
 ```bash
 cd web
-VITE_API_URL=https://api.recipeasy.recipeasy.yourdomain.com/v1 npm run build
+VITE_API_URL=https://api.recipeasy.yourdomain.com/v1 npm run build
 
 # Copy the build to the Droplet
 scp -r dist/* root@<droplet-ip>:/opt/recipeasy/infra/web/
